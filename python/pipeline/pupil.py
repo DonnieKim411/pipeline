@@ -1007,6 +1007,10 @@ def plot_fitting(key, start, end=-1, fit_type='Circle', fig=None, ax=None, mask_
     if fit_type not in ['circle', 'ellipse']:
         raise ValueError('fit_type must be either a circle or an ellipse')
 
+    # get video path
+    avi_path = (Eye & key).get_video_path()
+    cap = cv2.VideoCapture(avi_path)
+
     # find croppoing coords
     # It is possible that the provided key was not tracked with DLC. Then cropped_coords is the same size as the original frame size
     if len(Tracking.Deeplabcut & dict(key, tracking_method=2)) == 0:
@@ -1026,9 +1030,6 @@ def plot_fitting(key, start, end=-1, fit_type='Circle', fig=None, ax=None, mask_
         plt.subplots_adjust(left=0, bottom=0, right=1,
                             top=1, wspace=0, hspace=0)
 
-    # get video path
-    avi_path = (Eye & key).get_video_path()
-    cap = cv2.VideoCapture(avi_path)
 
     plt.xlim(0, cap.get(cv2.CAP_PROP_FRAME_WIDTH) - cropped_coords[0])
     plt.ylim(0, cap.get(cv2.CAP_PROP_FRAME_HEIGHT) - cropped_coords[2])
